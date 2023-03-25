@@ -1,12 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Nov 19 21:48:47 2022
 
-@author: TAY
-"""
-
-
-# -*- coding: utf-8 -*-
 import os
 import cv2
 import numpy as np
