@@ -15,8 +15,8 @@ from PIL import Image
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-folder = "/home/hfuu/TAY/Supervise/3D/data/kinetic100"
-interval = 6
+folder = "###########"
+interval = N
 
 def Histogram(frame):
     
@@ -57,7 +57,7 @@ for file in sorted(os.listdir(folder)):
             label_to_RGBdata = os.path.join(path_to_RGB, label)
             label_to_HTGdata = os.path.join(path_to_HTG, label)
             
-            if not os.path.exists(label_to_HTGdata): #  创建文件夹
+            if not os.path.exists(label_to_HTGdata): 
                 os.mkdir(label_to_HTGdata)
                 
             for video in sorted(os.listdir(label_to_RGBdata)):
@@ -72,7 +72,7 @@ for file in sorted(os.listdir(folder)):
                         img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
                         imglist.append(img)
                     HTG = TGradient(imglist)
-                    if not os.path.exists(video_to_htgimg): #  创建文件夹
+                    if not os.path.exists(video_to_htgimg): 
                         os.mkdir(video_to_htgimg)
                     cv2.imwrite(filename=os.path.join(video_to_htgimg, '0000{}.jpg'.format(str(i))), img=HTG)
                     
