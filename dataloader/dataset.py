@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Nov 20 15:08:02 2022
-
-@author: TAY
-"""
 
 import os
 from sklearn.model_selection import train_test_split
@@ -14,7 +8,6 @@ import numpy as np
 from torch.utils.data import Dataset
 import csv
 
-# preprocess=False    处理数据时为True,训练时为False.
 class Path(object):
     @staticmethod
     def db_dir(database):
@@ -48,7 +41,7 @@ class Path(object):
 
 class VideoDataset(Dataset):
 
-    def __init__(self, dataset='hmdb51', split='train', clip_len=8, labeldata = "YES", percent = 0.5):#      处理数据时为True,训练时为False.
+    def __init__(self, dataset='hmdb51', split='train', clip_len=8, labeldata = "YES", percent = 0.5):
         self.root_dir, self.output_dir = Path.db_dir(dataset)
         print(self.root_dir, self.output_dir)
         
@@ -57,13 +50,12 @@ class VideoDataset(Dataset):
         rgbtestfolder = os.path.join(self.output_dir, 'test(RGB)')
         htgtestfolder = os.path.join(self.output_dir, 'test(HTG)')
         
-        self.clip_len = clip_len          #16
+        self.clip_len = clip_len        
         self.split = split
         print(self.split)
         self.labeldata = labeldata
         self.percent = percent
         
-        # The following three parameters are chosen as described in the paper section 4.1
         self.resize_height = 128
         self.resize_width = 171
         self.crop_size = 112
@@ -77,24 +69,24 @@ class VideoDataset(Dataset):
         for label in sorted(os.listdir(rgbfolder)):
             
             if self.split == 'train' and self.labeldata == "YES":
-                for fname in os.listdir(os.path.join(rgbfolder, label))[:int(len(os.listdir(os.path.join(rgbfolder, label)))*self.percent)]:   # fname：每一个动作文件下的视频名称
+                for fname in os.listdir(os.path.join(rgbfolder, label))[:int(len(os.listdir(os.path.join(rgbfolder, label)))*self.percent)]:
                     self.rgbnames.append(os.path.join(rgbfolder, label, fname))
                     labels.append(label)
-                for fname in os.listdir(os.path.join(htgfolder, label))[:int(len(os.listdir(os.path.join(htgfolder, label)))*self.percent)]:   # fname：每一个动作文件下的视频名称
+                for fname in os.listdir(os.path.join(htgfolder, label))[:int(len(os.listdir(os.path.join(htgfolder, label)))*self.percent)]:
                     self.htgnames.append(os.path.join(htgfolder, label, fname))
                     
             elif self.split == 'train' and self.labeldata == "NO":
-                for fname in os.listdir(os.path.join(rgbfolder, label))[int(len(os.listdir(os.path.join(rgbfolder, label)))*self.percent):]:   # fname：每一个动作文件下的视频名称
+                for fname in os.listdir(os.path.join(rgbfolder, label))[int(len(os.listdir(os.path.join(rgbfolder, label)))*self.percent):]:
                     self.rgbnames.append(os.path.join(rgbfolder, label, fname))
                     labels.append(label)
-                for fname in os.listdir(os.path.join(htgfolder, label))[int(len(os.listdir(os.path.join(htgfolder, label)))*self.percent):]:   # fname：每一个动作文件下的视频名称
+                for fname in os.listdir(os.path.join(htgfolder, label))[int(len(os.listdir(os.path.join(htgfolder, label)))*self.percent):]:
                     self.htgnames.append(os.path.join(htgfolder, label, fname))
                     
             elif self.split == 'test':
-                for fname in os.listdir(os.path.join(rgbtestfolder, label)):   # fname：每一个动作文件下的视频名称
+                for fname in os.listdir(os.path.join(rgbtestfolder, label)):
                     self.rgbnames.append(os.path.join(rgbtestfolder, label, fname))
                     labels.append(label)
-                for fname in os.listdir(os.path.join(htgtestfolder, label)):   # fname：每一个动作文件下的视频名称
+                for fname in os.listdir(os.path.join(htgtestfolder, label)):
                     self.htgnames.append(os.path.join(htgtestfolder, label, fname))
                     
         assert len(labels) == len(self.rgbnames) == len(self.htgnames)
@@ -110,8 +102,8 @@ class VideoDataset(Dataset):
     
     def __getitem__(self, index):
         # Loading and preprocessing.
-        bufferrgb = self.load_frames(self.rgbnames[index]) # 先加载连续帧的数据
-        bufferhtg = self.load_frames(self.htgnames[index]) # 先加载连续帧的数据
+        bufferrgb = self.load_frames(self.rgbnames[index])
+        bufferhtg = self.load_frames(self.htgnames[index])
         bufferrgb = self.crop(bufferrgb, self.clip_len, self.crop_size)
         bufferhtg = self.crop(bufferhtg, self.clip_len, self.crop_size)
         labels = np.array(self.label_array[index])
@@ -158,7 +150,7 @@ class VideoDataset(Dataset):
         if np.random.random() < 0.5:
             if np.random.random() < 0.25:
                 for i, frame in enumerate(buffer):
-                    frame = cv2.flip(buffer[i], flipCode=1) # 图像以0.5的概率进行反转
+                    frame = cv2.flip(buffer[i], flipCode=1)
                     buffer[i] = cv2.flip(frame, flipCode=1)
             else:
                 for i, frame in enumerate(buffer):
@@ -179,7 +171,7 @@ class VideoDataset(Dataset):
         return buffer.transpose((3, 0, 1, 2))
 
     def load_frames(self, file_dir):
-        frames = sorted([os.path.join(file_dir, img) for img in os.listdir(file_dir)]) # 排序
+        frames = sorted([os.path.join(file_dir, img) for img in os.listdir(file_dir)])
         frame_count = len(frames)
         buffer = np.empty((frame_count, self.resize_height, self.resize_width, 3), np.dtype('float32'))
         for i, frame_name in enumerate(frames):
@@ -190,8 +182,7 @@ class VideoDataset(Dataset):
 
     def crop(self, buffer, clip_len, crop_size):
         # randomly select time index for temporal jittering
-        time_index = np.random.randint(buffer.shape[0] - clip_len) # 返回(0, buffer.shape[0] - clip_len)之间的数
-
+        time_index = np.random.randint(buffer.shape[0] - clip_len)
         # Randomly select start indices in order to crop the video
         height_index = np.random.randint(buffer.shape[1] - crop_size)
         width_index = np.random.randint(buffer.shape[2] - crop_size)
