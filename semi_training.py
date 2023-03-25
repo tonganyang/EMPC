@@ -11,6 +11,7 @@ from utils import AverageMeter, calculate_accuracy
 
 def semi_train_epoch(epoch,
                      train_loader,
+                     unlabel_loader,
                      model,
                      criterion,
                      optimizer,
