@@ -36,7 +36,7 @@ def train_epoch(epoch,
         targets = targets.to(device, non_blocking=True)
         outputrgb, rgbfeature, outputhtg, htgfeature = model(input_rgb, input_htg)
         loss = sup_loss = supervised_loss(sum([outputrgb(i) for i in outputrgb]) / len(outputrgb), labels) + supervised_loss(sum([outputhtg(i) for i in outputhtg]) / len(outputhtg), labels)
-        acc = calculate_accuracy(outputs, targets)
+        acc = calculate_accuracy((sum([outputrgb(i) for i in outputrgb]) / len(outputrgb) + sum([outputhtg(i) for i in outputhtg]) / len(outputhtg))/2, labels)
 
         losses.update(loss.item(), inputs.size(0))
         accuracies.update(acc, inputs.size(0))
