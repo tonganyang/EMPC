@@ -1,8 +1,3 @@
-"""
-在全连接层中添加随机失活Dropout(0.2)
-网络模型的输入通道、深度、(H、W)可以根据运行效果进行修改
-"""
-
 import math
 import numpy as np
 from functools import partial
