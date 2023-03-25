@@ -22,15 +22,32 @@ def parse_opts():
                         help='Result directory path')
     parser.add_argument(
         '--dataset',
-        default='kinetics',
+        default='kinetic100',
         type=str,
-        help='Used dataset (activitynet | kinetics | ucf101 | hmdb51)')
+        help='Used dataset (activitynet | kinetic100 | ucf101 | hmdb51)')
+    parser.add_argument('--resume_epoch',
+                        default=0, type=int)
+    parser.add_argument('--nEpochs',
+                        default=250,
+                        type=int)
+    parser.add_argument('--LR', 
+                        default=0.01, type=int)
+    parser.add_argument('--BatchSize',
+                        default=16, type=int)
+    parser.add_argument('--Percent',
+                        default=0.2, type=int)
+    parser.add_argument('--Confidence',
+                        default=0.75, type=int)
+    parser.add_argument('--lambda_cot_max',
+                        default=1, type=int)
+    parser.add_argument('--warm_up',
+                        default=50, type=float)
     parser.add_argument(
         '--n_classes',
-        default=400,
+        default=100,
         type=int,
         help=
-        'Number of classes (activitynet: 200, kinetics: 400 or 600, ucf101: 101, hmdb51: 51)'
+        'Number of classes (activitynet: 200, kinetic100: 100, ucf101: 101, hmdb51: 51)'
     )
     parser.add_argument('--n_pretrain_classes',
                         default=0,
