@@ -52,7 +52,7 @@ def semi_train_epoch(epoch,
             unsup_loss1 = unsupervised_loss(sum([outputrgb(i) for i in outputrgb]) / len(outputrgb), outputunhtg, p_cutoff)
             unsup_loss2 = unsupervised_loss(sum([outputhtg(i) for i in outputhtg]) / len(outputhtg), outputunrgb, p_cutoff)
             
-            acc = calculate_accuracy(outputs, labels)
+            acc = calculate_accuracy((sum([outputrgb(i) for i in outputrgb]) / len(outputrgb) + sum([outputhtg(i) for i in outputhtg]) / len(outputhtg))/2, labels)
             
             loss = sup_loss + lambda_cot * (unsup_loss1 + unsup_loss2) + contrastiveLoss(rgbfeature, htgfeature) + contrastiveLoss(unrgbfeature, unhtgfeature)
             
