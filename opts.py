@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 def parse_opts():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='EMPC: Efficient Multi-view Parallel Co-learning for Semi-supervised Action Recognition')
     parser.add_argument('--root_path',
                         default=None,
                         type=Path,
