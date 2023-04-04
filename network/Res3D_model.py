@@ -211,7 +211,7 @@ class ResNet_Parallel(nn.Module):
         x = self.avgpool(x)
         x = x.view(x.size(0), -1)
             
-        for committee in range(self.n_committee):
+        for committee in range(len(self.n_committee)):
             x = self.fcrgb(x)
             xx.append(x)
 
@@ -227,7 +227,7 @@ class ResNet_Parallel(nn.Module):
         y = self.avgpool(y)
         y = y.view(y.size(0), -1)
         
-        for committee in range(self.n_committee):
+        for committee in range(len(self.n_committee)):
             y = self.fchtg(y)
             yy.append(y)
             
